@@ -1,0 +1,68 @@
+g_pkg_flg = -bs-package-name game -bs-ns Game
+src_root_dir = /Users/anniecimack/cs17/game
+bsc = /Users/anniecimack/.nvm/versions/node/v12.12.0/lib/node_modules/bs-platform/lib/bsc.exe
+bsdep = /Users/anniecimack/.nvm/versions/node/v12.12.0/lib/node_modules/bs-platform/lib/bsb_helper.exe
+warnings = -w -30-40+6+7+27+32..39+44+45+101 -warn-error +101
+bsc_flags = -bs-suffix -nostdlib -I '/Users/anniecimack/cs17/game/node_modules/bs-platform/lib/ocaml' -color always
+ppx_flags = 
+g_pkg_incls = 
+bs_package_dev_includes = 
+g_ns = -bs-ns Game
+bsb_dir_group = 0
+refmt = /Users/anniecimack/.nvm/versions/node/v12.12.0/lib/node_modules/bs-platform/lib/refmt.exe
+reason_react_jsx = 
+refmt_flags = --print binary
+g_lib_incls = -I . -I src
+rule build_ast_and_module_sets_from_re
+  command = $bsc -pp "$refmt $refmt_flags" $reason_react_jsx  $ppx_flags $warnings $bsc_flags -c -o $out -bs-syntax-only -bs-binary-ast -impl $in
+  description = [34mBuilding[39m [2m${out}[22m
+build src/Demo.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/Demo.re
+rule build_deps
+  command = $bsdep $g_ns -g $bsb_dir_group $in
+  restat = 1
+  description = [34mBuilding[39m [2m${out}[22m
+build src/Demo.d : build_deps src/Demo.mlast
+rule re_cmj_cmi
+  command = $bsc $g_pkg_flg  -bs-re-out -bs-super-errors $g_pkg_incls $g_lib_incls $bsc_extra_includes $warnings $bsc_flags $gentypeconfig -o $out -c  $in $postbuild
+  dyndep = $in_e.d
+  restat = 1
+  description = [34mBuilding[39m [2m${out}[22m
+build src/Demo-Game.cmj |  $src_root_dir/src/Demo.bs.js src/Demo-Game.cmi : re_cmj_cmi src/Demo.mlast ||  src/Demo.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:src
+build src/Referee.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/Referee.re
+build src/Referee.d : build_deps src/Referee.mlast
+build src/Referee-Game.cmj |  $src_root_dir/src/Referee.bs.js src/Referee-Game.cmi : re_cmj_cmi src/Referee.mlast ||  src/Referee.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:src
+build src/SigGame.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/SigGame.re
+build src/SigGame.d : build_deps src/SigGame.mlast
+build src/SigGame-Game.cmj |  $src_root_dir/src/SigGame.bs.js src/SigGame-Game.cmi : re_cmj_cmi src/SigGame.mlast ||  src/SigGame.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:src
+build src/AIPlayer.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/AIPlayer.re
+build src/AIPlayer.d : build_deps src/AIPlayer.mlast
+build src/AIPlayer-Game.cmj |  $src_root_dir/src/AIPlayer.bs.js src/AIPlayer-Game.cmi : re_cmj_cmi src/AIPlayer.mlast ||  src/AIPlayer.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:src
+build src/Connect4.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/Connect4.re
+build src/Connect4.d : build_deps src/Connect4.mlast
+build src/Connect4-Game.cmj |  $src_root_dir/src/Connect4.bs.js src/Connect4-Game.cmi : re_cmj_cmi src/Connect4.mlast ||  src/Connect4.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:src
+build src/SigPlayer.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/SigPlayer.re
+build src/SigPlayer.d : build_deps src/SigPlayer.mlast
+build src/SigPlayer-Game.cmj |  $src_root_dir/src/SigPlayer.bs.js src/SigPlayer-Game.cmi : re_cmj_cmi src/SigPlayer.mlast ||  src/SigPlayer.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:src
+build src/HumanPlayer.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/HumanPlayer.re
+build src/HumanPlayer.d : build_deps src/HumanPlayer.mlast
+build src/HumanPlayer-Game.cmj |  $src_root_dir/src/HumanPlayer.bs.js src/HumanPlayer-Game.cmi : re_cmj_cmi src/HumanPlayer.mlast ||  src/HumanPlayer.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:src
+build src/CS17SetupGame.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/CS17SetupGame.re
+build src/CS17SetupGame.d : build_deps src/CS17SetupGame.mlast
+build src/CS17SetupGame-Game.cmj |  $src_root_dir/src/CS17SetupGame.bs.js src/CS17SetupGame-Game.cmi : re_cmj_cmi src/CS17SetupGame.mlast ||  src/CS17SetupGame.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:src
+build src/ReadLineSyncTest.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/ReadLineSyncTest.re
+build src/ReadLineSyncTest.d : build_deps src/ReadLineSyncTest.mlast
+build src/ReadLineSyncTest-Game.cmj |  $src_root_dir/src/ReadLineSyncTest.bs.js src/ReadLineSyncTest-Game.cmi : re_cmj_cmi src/ReadLineSyncTest.mlast ||  src/ReadLineSyncTest.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:src
+rule build_package
+  command = $bsc -w -49 -no-alias-deps -bs-cmi-only -c $in
+  restat = 1
+  description = [34mBuilding[39m [2m${out}[22m
+build Game.cmi : build_package Game.mlmap
